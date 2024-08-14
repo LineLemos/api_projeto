@@ -1,7 +1,9 @@
 package api.projeto.senai.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,11 +42,18 @@ public class EnderecoController {
                 .findFirst()
                 .orElse(null);
         if (endereco != null) {
-            endereco.setRua(enderecoAtualizado.getRua());
-            endereco.setCidade(enderecoAtualizado.getCidade());
-            endereco.setEstado(enderecoAtualizado.getEstado());
-            endereco.setCep(enderecoAtualizado.getCep());
+            endereco.setRua(enderecoAtualizado.getlogradouro());
+            endereco.setRua(enderecoAtualizado.getBairro());
+            endereco.setRua(enderecoAtualizado.getLocalidade());
+            endereco.setRua(enderecoAtualizado.getComplemento());
+            endereco.setRua(enderecoAtualizado.getUf());
+           
         }
         return endereco;
+        @DeleteMapping("/{id}")
+    public void deleteEndereco(@PathVariable Long id) {
+        enderecos.removeIf(endereco -> endereco.getId().equals(id));
+    }
 
+}
 }
