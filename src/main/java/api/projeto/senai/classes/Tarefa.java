@@ -1,7 +1,9 @@
 package api.projeto.senai.classes;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,25 +11,25 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "tarefas")
+@Table(name = "tarefa")
 
-public class Tarefas {
+public class Tarefa {
 
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column @NotBlank
     private String nomeTarefa;
 
-    @Column(nullable = false)
+    @Column
     private String tag;
 
     @Column
     private String descricao;
 
     @Column(name = "data_criacao")
-    private LocalDate dataCriacao;
+    private LocalDateTime dataCriacao;
 
     @Column(name = "data_atualizacao")
     private LocalDate dataAtualizacao;
@@ -35,8 +37,12 @@ public class Tarefas {
     @Column(name = "prazo")
     private LocalDate prazo;
 
-    @Column
-    private boolean concluida;
+    @Column(name = "tarefa_concluida")
+    private boolean concluida = false;
+
+    @OneToOne
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
 
     
 

@@ -1,6 +1,0 @@
-package api.projeto.senai.repository;
-import api.projeto.senai.classes.Tarefas;
-import org.springframework.data.jpa.repository.JpaRepository;
-public interface TarefasRepository extends JpaRepository<Tarefas, Long>{
-
-}

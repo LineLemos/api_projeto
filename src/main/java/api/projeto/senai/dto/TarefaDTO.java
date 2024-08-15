@@ -1,0 +1,24 @@
+package api.projeto.senai.dto;
+import java.time.LocalDateTime;
+
+import api.projeto.senai.classes.Tarefa;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+
+@Data
+public class TarefaDTO {
+
+    private Long id;
+
+    @NotBlank(message = "Campo não pode ser branco.")
+    private String nomeTarefa;
+    
+    private String tag;
+
+    private LocalDateTime dataCriacao;
+
+    private boolean concluida;
+
+
+}

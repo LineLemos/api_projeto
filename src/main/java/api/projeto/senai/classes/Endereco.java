@@ -1,27 +1,26 @@
 package api.projeto.senai.classes;
-
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "enderecos")
 public class Endereco {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 8)
+    @Column
+    @NotBlank
     private String cep;
 
     private String logradouro;
     private String bairro;
-    private String localidade;
+    private String numero;
     private String complemento;
-
+    private String cidade;
     private String uf;
 
-   
 }
