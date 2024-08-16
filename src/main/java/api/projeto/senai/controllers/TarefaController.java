@@ -1,7 +1,6 @@
 package api.projeto.senai.controllers;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,9 @@ import api.projeto.senai.services.TarefaService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
+
 @RestController
-@RequestMapping("/tarefas")
+@RequestMapping("tarefas")
 public class TarefaController {
 
     @Autowired
@@ -22,10 +22,12 @@ public class TarefaController {
 
     @Operation(summary = "Criar nova Tarefa", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Tarefa criada com sucesso."),
+            @ApiResponse(responseCode = "200", description = "Tarefa encontrada com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada com o ID fornecido."),
             @ApiResponse(responseCode = "400", description = "Dados de requisição inválidos."),
-            @ApiResponse(responseCode = "500", description = "Erro ao criar a tarefa.")
+            @ApiResponse(responseCode = "500", description = "Erro ao atualizar a tarefa.")
     })
+
     @PostMapping
     public ResponseEntity<TarefaDTO> criarTarefa(@Valid @RequestBody TarefaDTO tarefaDTO) {
         TarefaDTO novaTarefaDTO = tarefaService.criarTarefa(tarefaDTO);
@@ -35,19 +37,23 @@ public class TarefaController {
     @Operation(summary = "Busca tarefa pela tag", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tarefa encontrada com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada com a tag fornecida."),
-            @ApiResponse(responseCode = "500", description = "Erro ao buscar a tarefa.")
+            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada com o ID fornecido."),
+            @ApiResponse(responseCode = "400", description = "Dados de requisição inválidos."),
+            @ApiResponse(responseCode = "500", description = "Erro ao atualizar a tarefa.")
     })
-    @GetMapping("/{tag}")
-    public ResponseEntity<TarefaDTO> buscarTarefaPorTag(@RequestBody String tag) {
-        TarefaDTO tarefaDTO = tarefaService.buscarPorTag(tag);
-        return ResponseEntity.ok(tarefaDTO);
+
+    @GetMapping("tag/{tag}")
+    public ResponseEntity<List<TarefaDTO>> buscarPorTag(@PathVariable String tag) {
+       List<TarefaDTO> tarefasDTO = tarefaService.buscarPorTag(tag);
+        return ResponseEntity.ok(tarefasDTO);
     }
 
     @Operation(summary = "Lista todas as tarefas", method = "GET")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de tarefas retornada com sucesso."),
-            @ApiResponse(responseCode = "500", description = "Erro ao listar as tarefas.")
+            @ApiResponse(responseCode = "200", description = "Tarefa encontrada com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Tarefa não encontrada com o ID fornecido."),
+            @ApiResponse(responseCode = "400", description = "Dados de requisição inválidos."),
+            @ApiResponse(responseCode = "500", description = "Erro ao atualizar a tarefa.")
     })
     @GetMapping
     public ResponseEntity<List<TarefaDTO>> listarTarefas() {
@@ -59,9 +65,10 @@ public class TarefaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tarefa encontrada com sucesso."),
             @ApiResponse(responseCode = "404", description = "Tarefa não encontrada com o ID fornecido."),
-            @ApiResponse(responseCode = "500", description = "Erro ao buscar a tarefa.")
+            @ApiResponse(responseCode = "400", description = "Dados de requisição inválidos."),
+            @ApiResponse(responseCode = "500", description = "Erro ao atualizar a tarefa.")
     })
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<TarefaDTO> buscarTarefaPorId(@PathVariable Long id) {
         TarefaDTO tarefaDTO = tarefaService.getById(id);
         return ResponseEntity.ok(tarefaDTO);
@@ -74,8 +81,9 @@ public class TarefaController {
             @ApiResponse(responseCode = "400", description = "Dados de requisição inválidos."),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar a tarefa.")
     })
+    
     @PutMapping("/{id}")
-    public ResponseEntity<TarefaDTO> atualizarTarefa(@PathVariable Long id, @Valid @RequestBody TarefaDTO tarefaDTO) {
+    public ResponseEntity<TarefaDTO> update(@PathVariable Long id, @Valid @RequestBody TarefaDTO tarefaDTO) {
         TarefaDTO tarefaAtualizada = tarefaService.update(id, tarefaDTO);
         return ResponseEntity.ok(tarefaAtualizada);
     }
@@ -89,10 +97,10 @@ public class TarefaController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarTarefa(@PathVariable Long id) {
-        TarefaDTO tarefaDTO = tarefaService.getById(id);
-        if (tarefaDTO == null) {
-            return ResponseEntity.notFound().build();
-        }
+        // TarefaDTO tarefaDTO = tarefaService.getById(id);
+        // if (tarefaDTO == null) {
+        //     return ResponseEntity.notFound().build();
+        // }
         tarefaService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Tarefa com ID " + id + " foi deletada com sucesso.");
     }

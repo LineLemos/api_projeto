@@ -17,7 +17,7 @@ public class EnderecoController {
     @Operation(summary = "Busca endereços", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
     })
@@ -30,7 +30,7 @@ public class EnderecoController {
     @Operation(summary = "Busca todos os endereços", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
     })
@@ -46,7 +46,7 @@ public class EnderecoController {
     @Operation(summary = "Criar novo Endereço", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
     })
@@ -59,8 +59,8 @@ public class EnderecoController {
 
     @Operation(summary = "Edita o Endereço pela ID", method = "PUT")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "200", description = "Endereço editado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
     })
@@ -81,8 +81,8 @@ public class EnderecoController {
 
     @Operation(summary = "Deleta o Endereço pela ID", method = "DELETE")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "200", description = "Endereco deletado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
     })
