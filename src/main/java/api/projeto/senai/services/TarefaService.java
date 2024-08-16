@@ -65,17 +65,18 @@ public class TarefaService {
     }
 
     public TarefaDTO update(Long id, TarefaDTO tarefaDTO) {
-        if (id == null) {
-            throw new InvalidInputException("Id não pode ser nulo ou vazio.");
-        }
-        Tarefa tarefaExistente = tarefaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada com ID: " + id));
+        // if (id == null) {
+        //     throw new InvalidInputException("Id não pode ser nulo ou vazio.");
+        // }
+        TarefaDTO tarefaExistente = getById(id);
+                // .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada com ID: " + id));
 
         modelMapper.map(tarefaDTO, tarefaExistente);
         Tarefa tarefaAtualizada = tarefaRepository.save(tarefaExistente);
 
         return convertToDto(tarefaAtualizada);
     }
+    
 
     public void delete(Long id) {
 

@@ -1,7 +1,5 @@
 package api.projeto.senai.dto;
 import java.time.LocalDateTime;
-
-import api.projeto.senai.classes.Tarefa;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

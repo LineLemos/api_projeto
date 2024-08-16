@@ -82,7 +82,7 @@ public class TarefaController {
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar a tarefa.")
     })
     
-    @PutMapping("/{id}")
+    @PutMapping("id/{id}")
     public ResponseEntity<TarefaDTO> update(@PathVariable Long id, @Valid @RequestBody TarefaDTO tarefaDTO) {
         TarefaDTO tarefaAtualizada = tarefaService.update(id, tarefaDTO);
         return ResponseEntity.ok(tarefaAtualizada);
@@ -97,10 +97,6 @@ public class TarefaController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarTarefa(@PathVariable Long id) {
-        // TarefaDTO tarefaDTO = tarefaService.getById(id);
-        // if (tarefaDTO == null) {
-        //     return ResponseEntity.notFound().build();
-        // }
         tarefaService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Tarefa com ID " + id + " foi deletada com sucesso.");
     }
