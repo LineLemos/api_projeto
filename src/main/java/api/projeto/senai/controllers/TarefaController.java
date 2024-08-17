@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import api.projeto.senai.classes.Tarefa;
 import api.projeto.senai.dto.TarefaDTO;
 import api.projeto.senai.services.TarefaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,10 +83,14 @@ public class TarefaController {
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar a tarefa.")
     })
     
-    @PutMapping("id/{id}")
-    public ResponseEntity<TarefaDTO> update(@PathVariable Long id, @Valid @RequestBody TarefaDTO tarefaDTO) {
-        TarefaDTO tarefaAtualizada = tarefaService.update(id, tarefaDTO);
-        return ResponseEntity.ok(tarefaAtualizada);
+     @PutMapping("/{id}")
+    public ResponseEntity<TarefaDTO> update(@PathVariable Long id, @Valid @RequestBody TarefaDTO tarefaDTOnovo) {
+       Tarefa tarefaExistente = tarefaService.getByIdTarefa(id);
+       if (tarefaExistente == null) {
+        return ResponseEntity.notFound().build();
+       }
+       TarefaDTO tarefaDTOSalva = tarefaService.update(tarefaExistente, tarefaDTOnovo);
+        return ResponseEntity.ok(tarefaDTOSalva);
     }
 
     @Operation(summary = "Deleta tarefa pelo ID", method = "DELETE")

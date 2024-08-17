@@ -63,20 +63,32 @@ public class TarefaService {
                 .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada com ID: " + id));
         return convertToDto(tarefa);
     }
+     public Tarefa getByIdTarefa(Long id){
+        return tarefaRepository.findById(id).orElse(null);
+    }  
 
-    public TarefaDTO update(Long id, TarefaDTO tarefaDTO) {
-        // if (id == null) {
-        //     throw new InvalidInputException("Id não pode ser nulo ou vazio.");
-        // }
-        TarefaDTO tarefaExistente = getById(id);
-                // .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada com ID: " + id));
+  public TarefaDTO update(Tarefa tarefa, TarefaDTO tarefaDTO) {
+        
+        if (tarefaDTO.getNomeTarefa() == null) {
+             throw new InvalidInputException("Nome não pode ser nulo ou vazio.");
+        }
 
-        modelMapper.map(tarefaDTO, tarefaExistente);
-        Tarefa tarefaAtualizada = tarefaRepository.save(tarefaExistente);
+            tarefa.setNomeTarefa(tarefaDTO.getNomeTarefa());
 
-        return convertToDto(tarefaAtualizada);
+        if (tarefaDTO.getTag() == null) {
+            throw new InvalidInputException("Tag não pode ser nulo ou vazio.");
+        }
+
+        tarefa.setTag(tarefaDTO.getTag());
+
+        Tarefa tarefaSalva = tarefaRepository.save(tarefa);
+        TarefaDTO tarefasDto = new TarefaDTO();
+
+        tarefasDto.setId(tarefaSalva.getId());
+        tarefasDto.setNomeTarefa(tarefaSalva.getNomeTarefa());
+        tarefasDto.setTag(tarefasDto.getTag());
+        return tarefasDto;
     }
-    
 
     public void delete(Long id) {
 

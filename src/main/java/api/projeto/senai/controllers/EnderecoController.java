@@ -1,94 +1,86 @@
 package api.projeto.senai.controllers;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.web.bind.annotation.*;
-import api.projeto.senai.classes.Endereco;
+
+import api.projeto.senai.dto.EnderecoDTO;
+import api.projeto.senai.services.EnderecoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("endereco")
+@RequestMapping("/endereco")
 public class EnderecoController {
 
-    private List<Endereco> enderecos = new ArrayList<>();
-
-
-    @Operation(summary = "Busca endereços", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
-    })
-
-    @GetMapping
-    public List<Endereco> getEnderecos() {
-        return enderecos;
-    }
+    @Autowired
+    private EnderecoService enderecoService;
 
     @Operation(summary = "Busca todos os endereços", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados.")
     })
-
-    @GetMapping("/{id}")
-    public Endereco getEndereco(@PathVariable Long id) {
-        return enderecos.stream()
-                .filter(endereco -> endereco.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    @GetMapping
+    public ResponseEntity<List<EnderecoDTO>> listarEndereco() {
+        List<EnderecoDTO> enderecoDTOs = enderecoService.getAll();
+        return ResponseEntity.ok(enderecoDTOs);
     }
 
-    @Operation(summary = "Criar novo Endereço", method = "POST")
+    @Operation(summary = "Busca endereço pelo ID", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "404", description = "Endereço não encontrado."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados.")
     })
+    @GetMapping("/{id}")
+    public ResponseEntity<EnderecoDTO> getById(@PathVariable Long id) {
+        EnderecoDTO enderecoDTO = enderecoService.getById(id);
+        return ResponseEntity.ok(enderecoDTO);
+    }
 
+    @Operation(summary = "Cria um novo Endereço", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Endereço criado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
+            @ApiResponse(responseCode = "500", description = "Erro ao criar o endereço.")
+    })
     @PostMapping
-    public Endereco createEndereco(@RequestBody Endereco endereco) {
-        enderecos.add(endereco);
-        return endereco;
+    public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoDTO enderecoDTO) {
+        EnderecoDTO novoEnderecoDTO = enderecoService.create(enderecoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoEnderecoDTO);
     }
 
-    @Operation(summary = "Edita o Endereço pela ID", method = "PUT")
+    @Operation(summary = "Atualiza o Endereço pelo ID", method = "PUT")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Endereço editado com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "200", description = "Endereço atualizado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Endereço não encontrado."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
+            @ApiResponse(responseCode = "500", description = "Erro ao atualizar o endereço.")
     })
-
-
     @PutMapping("/{id}")
-    public Endereco updateEndereco(@PathVariable Long id, @RequestBody Endereco enderecoAtualizado) {
-        Endereco endereco = enderecos.stream()
-                .filter(e -> e.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-        if (endereco != null) {
-            endereco.setCep(enderecoAtualizado.getCep());
-            endereco.setUf(enderecoAtualizado.getUf());
-        }
-        return endereco;
-    }
+public ResponseEntity<EnderecoDTO> update(@PathVariable Long id, @Valid @RequestBody EnderecoDTO enderecoDTO) {
+    
+    EnderecoDTO enderecoDTOSalvo = enderecoService.update(id, enderecoDTO); 
+    
+    return ResponseEntity.ok(enderecoDTOSalvo);
+}
 
-    @Operation(summary = "Deleta o Endereço pela ID", method = "DELETE")
+    @Operation(summary = "Deleta o Endereço pelo ID", method = "DELETE")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Endereco deletado com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Dados de requisição inválida."),
+            @ApiResponse(responseCode = "200", description = "Endereço deletado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Endereço não encontrado."),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos."),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar busca dos dados."),
+            @ApiResponse(responseCode = "500", description = "Erro ao deletar o endereço.")
     })
-
     @DeleteMapping("/{id}")
-    public void deleteEndereco(@PathVariable Long id) {
-        enderecos.removeIf(endereco -> endereco.getId().equals(id));
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        enderecoService.delete(id);
+        return ResponseEntity.ok("Endereço com ID " + id + " foi deletado com sucesso.");
     }
 }
